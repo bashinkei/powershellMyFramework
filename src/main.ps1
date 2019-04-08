@@ -6,30 +6,28 @@ $cwd = Split-Path $MyInvocation.MyCommand.Path -Parent
 $workRoot = Split-Path $cwd -Parent
 
 echo "----------"
-echo "test1"
-echo "----------"
 
-  $sqlexcuter = Get-SqliteExecuter -dbPath "$($workRoot)\data\db\testdb.sqlite3" -dllPath "$($workRoot)\resource\lib\System.Data.sqlite.dll"
+$sqlexcuter = Get-SqliteExecuter -dbPath "$($workRoot)\data\db\testdb.sqlite3" -dllPath "$($workRoot)\resource\lib\System.Data.sqlite.dll"
 try {
-  $test = $sqlexcuter.ExecuteReadable("SELECT * FROM t1")
+  $test = $sqlexcuter.ExecuteReadaber("SELECT * FROM t1")
 
   $test|Where-Object -FilterScript {$_.name -eq "Ubuntu"}
 
+  $test|Format-Table
+
   foreach($t in $test){
-    echo　"$($t.name), $($t.ostype)"
+    echo　"$($t.name.getType()), $($t.ostype.getType()), $($t.test.getType()), $($t.numelic.getType()), $($t.real.getType())"
+    echo　"$($t.name), $($t.ostype), $($t.test), $($t.numelic), $($t.real)"
   }
+
+  $sqlexcuter.ExecuteNonQuery("INSERT INTO t1('name','ostype') VALUES('ubu','lin')")
   
 }
 finally {
   $sqlexcuter.Close()
 }
-    
 
 echo "----------"
-echo "test2"
-echo "----------"
-
-
 
 # System.Data.sqlite.dllのロード
 # [void][System.Reflection.Assembly]::LoadFile("$($workRoot)\resource\lib\System.Data.sqlite.dll")
@@ -66,7 +64,7 @@ echo "----------"
 # $ins_data = @(@("Windows10","Windows"),@("Ubuntu","Linux"),@("FreeBSD","BSD"))
 # $ins_data | % {
 #   $name  =$_[0];
-#   $ostype=$_[1];
+#   $=$_[1];
 #   $sql="INSERT INTO t1 VALUES('${name}','${ostype}')"
 #   $sqlcmd.CommandText = $sql
 #   $ret = $sqlcmd.ExecuteNonQuery()
